@@ -32,12 +32,17 @@
       filter: brightness(0.2) grayscale(100%) contrast(120%) blur(3px);
     }
 
-    .overlay {
+    .overlay, .glitch-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .overlay {
       background: repeating-linear-gradient(
         0deg,
         rgba(255,255,255,0.01),
@@ -45,8 +50,17 @@
         transparent 1px,
         transparent 2px
       );
-      z-index: -1;
       mix-blend-mode: overlay;
+    }
+
+    .glitch-overlay {
+      animation: colorShift 6s infinite ease-in-out;
+    }
+
+    @keyframes colorShift {
+      0%, 100% { background-color: rgba(255, 0, 128, 0.02); }
+      33% { background-color: rgba(0, 255, 255, 0.02); }
+      66% { background-color: rgba(255, 255, 0, 0.02); }
     }
 
     .glitch {
@@ -129,6 +143,37 @@
       color: #fff;
       border-bottom: 1px solid #fff;
     }
+
+    .timestamp {
+      margin-top: 2em;
+      font-size: 0.9rem;
+      color: #444;
+      animation: blink 1.5s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    #soundBtn {
+      position: absolute;
+      bottom: 2vh;
+      right: 2vw;
+      background: rgba(255, 59, 59, 0.15);
+      color: #fff;
+      padding: 0.5em 1em;
+      border: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px dashed #ff3b3b;
+      display: none;
+      z-index: 9999;
+    }
+    #soundBtn:hover {
+      background: rgba(255, 59, 59, 0.25);
+    }
   </style>
 </head>
 <body>
@@ -137,16 +182,46 @@
   </video>
 
   <div class="overlay"></div>
+  <div class="glitch-overlay"></div>
 
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_8424d55f20.mp3" type="audio/mp3">
+  <audio id="ambience" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/02/08/audio_f4d324a699.mp3" type="audio/mp3">
   </audio>
+
+  <button id="soundBtn">Enable Sound</button>
 
   <div class="content">
     <div class="glitch" data-text="err0r_404">err0r_404</div>
     <p>this place was never meant to be found</p>
     <p>you are drifting between frequencies</p>
     <p>return to <a class="return-link" href="https://instagram.com/l0nely_plan3t">l0nely_plan3t?</a></p>
+    <p class="timestamp" id="glitchTime"></p>
   </div>
+
+  <script>
+    const audio = document.getElementById('ambience');
+    const btn = document.getElementById('soundBtn');
+
+    window.addEventListener('load', () => {
+      const playAttempt = audio.play();
+      if (playAttempt && playAttempt.catch) {
+        playAttempt.catch(() => {
+          btn.style.display = 'block';
+        });
+      }
+    });
+
+    btn.addEventListener('click', () => {
+      audio.play();
+      btn.style.display = 'none';
+    });
+
+    function updateGlitchTime() {
+      const now = new Date();
+      const time = now.toLocaleTimeString();
+      document.getElementById('glitchTime').textContent = `timestamp: ${time}`;
+    }
+    setInterval(updateGlitchTime, 1000);
+  </script>
 </body>
 </html>
