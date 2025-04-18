@@ -33,7 +33,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      z-index: -2;
+      z-index: -3;
       filter: brightness(0.15) grayscale(100%) contrast(110%) blur(2px);
     }
 
@@ -42,7 +42,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: -2;
       mix-blend-mode: overlay;
     }
 
@@ -56,6 +56,37 @@
       background-image: url('https://i.imgur.com/ebWhDqV.png');
       opacity: 0.03;
       animation: flickerDust 5s ease-in-out infinite;
+    }
+
+    .message-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      font-size: 1rem;
+      color: #cc0000;
+      opacity: 0.035;
+      line-height: 1.2em;
+      white-space: pre-wrap;
+      pointer-events: none;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .message-overlay::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        rgba(255,255,255,0.01) 2px
+      );
+      z-index: 1;
     }
 
     @keyframes grainShift {
@@ -146,6 +177,9 @@
   </video>
   <div class="grain"></div>
   <div class="dust"></div>
+  <div class="message-overlay">
+    ${"Maybe what you seek is seeking you\n".repeat(100)}
+  </div>
 
   <div class="content">
     <div class="glitch">err0r_404</div>
