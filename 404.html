@@ -9,7 +9,7 @@
 
     body {
       margin: 0;
-      background-color: #000;
+      background-color: #0a0a0a;
       font-family: 'Share Tech Mono', monospace;
       display: flex;
       justify-content: center;
@@ -17,13 +17,13 @@
       height: 100vh;
       overflow: hidden;
       position: relative;
-      color: #00ff95;
-      animation: fadeIn 4s ease-in-out forwards;
+      color: #aaa;
+      animation: fadeIn 3s ease-out;
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .grain, .dust {
@@ -31,116 +31,100 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      z-index: 999;
+      z-index: 0;
       mix-blend-mode: overlay;
     }
 
     .grain {
       background-image: url('https://i.imgur.com/8fK4h1L.png');
-      opacity: 0.07;
-      animation: grain 1s steps(10) infinite;
+      opacity: 0.06;
+      animation: grainShift 0.8s steps(8) infinite;
     }
 
     .dust {
       background-image: url('https://i.imgur.com/ebWhDqV.png');
-      opacity: 0.04;
-      animation: flickerDust 3s infinite ease-in-out;
+      opacity: 0.03;
+      animation: flickerDust 5s ease-in-out infinite;
     }
 
-    @keyframes grain {
-      0%, 100% { transform: translate(0, 0); }
-      20% { transform: translate(-1px, 1px); }
-      40% { transform: translate(-1px, -1px); }
-      60% { transform: translate(1px, 1px); }
-      80% { transform: translate(1px, -1px); }
+    @keyframes grainShift {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-1px, 1px); }
+      100% { transform: translate(1px, -1px); }
     }
 
     @keyframes flickerDust {
-      0%, 100% { opacity: 0.03; }
-      50% { opacity: 0.06; }
-    }
-
-    .glitch {
-      font-size: 3.5rem;
-      color: #ff3b3b;
-      letter-spacing: 0.15rem;
-      position: relative;
-      animation: glitch-flicker 1s infinite, fadeGlitch 4s ease-in-out infinite;
-    }
-
-    @keyframes glitch-flicker {
-      0% { text-shadow: 1px 0 red, -1px 0 lime; }
-      50% { text-shadow: -1px 0 lime, 1px 0 red; }
-      100% { text-shadow: 1px 0 red, -1px 0 lime; }
-    }
-
-    @keyframes fadeGlitch {
-      0%, 100% { opacity: 0.85; }
-      50% { opacity: 0.4; }
+      0%, 100% { opacity: 0.02; }
+      50% { opacity: 0.05; }
     }
 
     .content {
       text-align: center;
       z-index: 1;
-      animation: fadeContent 6s ease-in-out forwards;
+      animation: fadeUp 5s ease-in-out;
     }
 
-    @keyframes fadeContent {
-      0% { opacity: 0; transform: scale(0.97); }
-      100% { opacity: 1; transform: scale(1); }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .glitch {
+      font-size: 3.2rem;
+      color: #bbb;
+      letter-spacing: 0.1rem;
+      position: relative;
+      animation: glitchFade 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes glitchFade {
+      0% { opacity: 1; transform: translateX(0); }
+      50% { opacity: 0.4; transform: translateX(-1px); }
+      100% { opacity: 1; transform: translateX(1px); }
     }
 
     p {
       font-size: 1.2rem;
       margin-top: 0.6em;
-      color: #00ff95;
-      opacity: 0.85;
-      animation: textFade 5s ease-in-out infinite;
+      color: #999;
+      opacity: 0.7;
+      animation: pFade 6s ease-in-out infinite;
     }
 
-    @keyframes textFade {
-      0%, 100% { opacity: 0.85; }
+    @keyframes pFade {
+      0%, 100% { opacity: 0.75; }
       50% { opacity: 0.4; }
     }
 
     a.return-link {
       display: inline-block;
       margin-top: 2em;
-      color: #ff3b3b;
+      color: #ccc;
       text-decoration: none;
-      border-bottom: 1px dashed #ff3b3b;
+      border-bottom: 1px dotted #666;
       font-size: 1rem;
-      opacity: 0.7;
-      transition: all 0.3s ease;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
     }
 
     a.return-link:hover {
       opacity: 1;
-      color: #fff;
-      border-bottom: 1px solid #fff;
     }
 
     .timestamp {
       margin-top: 2em;
-      font-size: 3rem;
-      font-family: 'DS-Digital', 'Courier New', monospace;
-      color: #ff3b3b;
-      background: #111;
-      padding: 0.4em 0.8em;
+      font-size: 2.5rem;
+      font-family: 'Courier New', monospace;
+      color: #888;
+      background: rgba(0,0,0,0.5);
+      padding: 0.3em 0.7em;
       border-radius: 0.2em;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
-      text-shadow: 0 0 5px #f00, 0 0 15px #f00;
-      animation: fadeTime 3s ease-in-out infinite;
+      animation: clockFade 4s ease-in-out infinite;
     }
 
-    @keyframes fadeTime {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    @font-face {
-      font-family: 'DS-Digital';
-      src: url('https://cdn.jsdelivr.net/gh/makethedigital/fonts@main/DS-DIGI.TTF') format('truetype');
+    @keyframes clockFade {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.5; }
     }
   </style>
 </head>
