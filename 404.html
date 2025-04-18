@@ -18,7 +18,6 @@
       overflow: hidden;
       position: relative;
       color: #ccc;
-      text-shadow: 0 0 5px rgba(255,255,255,0.05);
     }
 
     .background-video {
@@ -32,7 +31,7 @@
       filter: brightness(0.2) grayscale(100%) contrast(120%) blur(3px);
     }
 
-    .overlay, .glitch-overlay {
+    .overlay, .scanlines {
       position: absolute;
       top: 0;
       left: 0;
@@ -53,59 +52,35 @@
       mix-blend-mode: overlay;
     }
 
-    .glitch-overlay {
-      animation: colorShift 6s infinite ease-in-out;
+    .scanlines {
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.05) 1px,
+        transparent 2px
+      );
+      animation: scanMove 4s linear infinite;
     }
 
-    @keyframes colorShift {
-      0%, 100% { background-color: rgba(255, 0, 128, 0.02); }
-      33% { background-color: rgba(0, 255, 255, 0.02); }
-      66% { background-color: rgba(255, 255, 0, 0.02); }
+    @keyframes scanMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100%; }
     }
 
     .glitch {
-      position: relative;
       font-size: 3rem;
       color: #ff3b3b;
       letter-spacing: 0.2rem;
+      position: relative;
+      animation: glitch-animation 0.9s infinite;
     }
 
-    .glitch::before, .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .glitch::before {
-      animation: glitchTop 2s infinite linear;
-      top: -2px;
-      color: #00fff7;
-      z-index: -1;
-    }
-
-    .glitch::after {
-      animation: glitchBot 1.5s infinite linear;
-      top: 2px;
-      color: #ff00c8;
-      z-index: -1;
-    }
-
-    @keyframes glitchTop {
-      0% { clip: rect(0, 9999px, 0, 0); }
-      10% { clip: rect(0, 9999px, 10px, 0); }
-      20% { clip: rect(0, 9999px, 0, 0); }
-      30% { clip: rect(5px, 9999px, 15px, 0); }
-      100% { clip: rect(0, 9999px, 0, 0); }
-    }
-
-    @keyframes glitchBot {
-      0% { clip: rect(0, 9999px, 0, 0); }
-      10% { clip: rect(5px, 9999px, 10px, 0); }
-      20% { clip: rect(0, 9999px, 0, 0); }
-      30% { clip: rect(10px, 9999px, 20px, 0); }
-      100% { clip: rect(0, 9999px, 0, 0); }
+    @keyframes glitch-animation {
+      0% { transform: translate(0); }
+      20% { transform: translate(-1px, 1px); }
+      40% { transform: translate(-1px, -1px); }
+      60% { transform: translate(1px, 1px); }
+      80% { transform: translate(1px, -1px); }
+      100% { transform: translate(0); }
     }
 
     .content {
@@ -118,13 +93,6 @@
       margin-top: 0.5em;
       color: #999;
       opacity: 0.8;
-      animation: floatText 6s ease-in-out infinite;
-    }
-
-    @keyframes floatText {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-4px); opacity: 0.6; }
-      100% { transform: translateY(0); }
     }
 
     a.return-link {
@@ -146,14 +114,20 @@
 
     .timestamp {
       margin-top: 2em;
-      font-size: 0.9rem;
-      color: #444;
-      animation: blink 1.5s step-end infinite;
+      font-size: 3rem;
+      font-family: 'DS-Digital', 'Courier New', monospace;
+      color: #ff0000;
+      background: #111;
+      padding: 0.4em 0.8em;
+      border-radius: 0.2em;
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+      text-shadow: 0 0 5px #f00, 0 0 20px #f00;
+      animation: blinkTime 1s steps(2, start) infinite;
     }
 
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+    @keyframes blinkTime {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
 
     #soundBtn {
@@ -174,6 +148,11 @@
     #soundBtn:hover {
       background: rgba(255, 59, 59, 0.25);
     }
+
+    @font-face {
+      font-family: 'DS-Digital';
+      src: url('https://cdn.jsdelivr.net/gh/makethedigital/fonts@main/DS-DIGI.TTF') format('truetype');
+    }
   </style>
 </head>
 <body>
@@ -182,7 +161,7 @@
   </video>
 
   <div class="overlay"></div>
-  <div class="glitch-overlay"></div>
+  <div class="scanlines"></div>
 
   <audio id="ambience" loop>
     <source src="https://cdn.pixabay.com/audio/2023/02/08/audio_f4d324a699.mp3" type="audio/mp3">
@@ -191,7 +170,7 @@
   <button id="soundBtn">Enable Sound</button>
 
   <div class="content">
-    <div class="glitch" data-text="err0r_404">err0r_404</div>
+    <div class="glitch">err0r_404</div>
     <p>this place was never meant to be found</p>
     <p>you are drifting between frequencies</p>
     <p>return to <a class="return-link" href="https://instagram.com/l0nely_plan3t">l0nely_plan3t?</a></p>
@@ -219,7 +198,7 @@
     function updateGlitchTime() {
       const now = new Date();
       const time = now.toLocaleTimeString();
-      document.getElementById('glitchTime').textContent = `timestamp: ${time}`;
+      document.getElementById('glitchTime').textContent = time;
     }
     setInterval(updateGlitchTime, 1000);
   </script>
