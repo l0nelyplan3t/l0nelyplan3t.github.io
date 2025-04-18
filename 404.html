@@ -9,7 +9,7 @@
 
     body {
       margin: 0;
-      background-color: #0d0d0d;
+      background-color: #000;
       font-family: 'Share Tech Mono', monospace;
       display: flex;
       justify-content: center;
@@ -17,70 +17,41 @@
       height: 100vh;
       overflow: hidden;
       position: relative;
-      color: #ccc;
+      color: #00ff95; /* Matrix green */
     }
 
-    .background-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -2;
-      filter: brightness(0.2) grayscale(100%) contrast(120%) blur(3px);
-    }
-
-    .overlay, .scanlines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
+    .grain {
       pointer-events: none;
-    }
-
-    .overlay {
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.01),
-        rgba(255,255,255,0.01) 1px,
-        transparent 1px,
-        transparent 2px
-      );
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+      background-image: url('https://i.imgur.com/8fK4h1L.png');
       mix-blend-mode: overlay;
+      opacity: 0.07;
+      animation: grain 1s steps(10) infinite;
     }
 
-    .scanlines {
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.05) 1px,
-        transparent 2px
-      );
-      animation: scanMove 4s linear infinite;
-    }
-
-    @keyframes scanMove {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 100%; }
-    }
-
-    .glitch {
-      font-size: 3rem;
-      color: #ff3b3b;
-      letter-spacing: 0.2rem;
-      position: relative;
-      animation: glitch-animation 0.9s infinite;
-    }
-
-    @keyframes glitch-animation {
-      0% { transform: translate(0); }
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
       20% { transform: translate(-1px, 1px); }
       40% { transform: translate(-1px, -1px); }
       60% { transform: translate(1px, 1px); }
       80% { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
+    }
+
+    .glitch {
+      font-size: 3.5rem;
+      color: #ff3b3b; /* candy red */
+      letter-spacing: 0.15rem;
+      position: relative;
+      animation: glitch-flicker 1s infinite;
+    }
+
+    @keyframes glitch-flicker {
+      0% { text-shadow: 1px 0 red, -1px 0 lime; }
+      50% { text-shadow: -1px 0 lime, 1px 0 red; }
+      100% { text-shadow: 1px 0 red, -1px 0 lime; }
     }
 
     .content {
@@ -89,9 +60,9 @@
     }
 
     p {
-      font-size: 1.1rem;
-      margin-top: 0.5em;
-      color: #999;
+      font-size: 1.2rem;
+      margin-top: 0.6em;
+      color: #00ff95;
       opacity: 0.8;
     }
 
@@ -102,8 +73,8 @@
       text-decoration: none;
       border-bottom: 1px dashed #ff3b3b;
       font-size: 1rem;
-      opacity: 0.6;
-      transition: all 0.2s ease;
+      opacity: 0.7;
+      transition: all 0.3s ease;
     }
 
     a.return-link:hover {
@@ -116,37 +87,12 @@
       margin-top: 2em;
       font-size: 3rem;
       font-family: 'DS-Digital', 'Courier New', monospace;
-      color: #ff0000;
+      color: #ff3b3b;
       background: #111;
       padding: 0.4em 0.8em;
       border-radius: 0.2em;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
-      text-shadow: 0 0 5px #f00, 0 0 20px #f00;
-      animation: blinkTime 1s steps(2, start) infinite;
-    }
-
-    @keyframes blinkTime {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    #soundBtn {
-      position: absolute;
-      bottom: 2vh;
-      right: 2vw;
-      background: rgba(255, 59, 59, 0.15);
-      color: #fff;
-      padding: 0.5em 1em;
-      border: none;
-      font-family: inherit;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: 1px dashed #ff3b3b;
-      display: none;
-      z-index: 9999;
-    }
-    #soundBtn:hover {
-      background: rgba(255, 59, 59, 0.25);
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+      text-shadow: 0 0 5px #f00, 0 0 15px #f00;
     }
 
     @font-face {
@@ -156,18 +102,7 @@
   </style>
 </head>
 <body>
-  <video class="background-video" autoplay muted loop playsinline>
-    <source src="https://cdn.coverr.co/videos/coverr-night-fog-3601/1080p.mp4" type="video/mp4">
-  </video>
-
-  <div class="overlay"></div>
-  <div class="scanlines"></div>
-
-  <audio id="ambience" loop>
-    <source src="https://cdn.pixabay.com/audio/2023/02/08/audio_f4d324a699.mp3" type="audio/mp3">
-  </audio>
-
-  <button id="soundBtn">Enable Sound</button>
+  <div class="grain"></div>
 
   <div class="content">
     <div class="glitch">err0r_404</div>
@@ -178,23 +113,6 @@
   </div>
 
   <script>
-    const audio = document.getElementById('ambience');
-    const btn = document.getElementById('soundBtn');
-
-    window.addEventListener('load', () => {
-      const playAttempt = audio.play();
-      if (playAttempt && playAttempt.catch) {
-        playAttempt.catch(() => {
-          btn.style.display = 'block';
-        });
-      }
-    });
-
-    btn.addEventListener('click', () => {
-      audio.play();
-      btn.style.display = 'none';
-    });
-
     function updateGlitchTime() {
       const now = new Date();
       const time = now.toLocaleTimeString();
