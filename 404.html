@@ -9,7 +9,7 @@
 
     body {
       margin: 0;
-      background-color: #0a0a0a;
+      background-color: #000;
       font-family: 'Share Tech Mono', monospace;
       display: flex;
       justify-content: center;
@@ -17,151 +17,92 @@
       height: 100vh;
       overflow: hidden;
       position: relative;
-      color: #aaa;
-    }
-
-    .background-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -4;
-      filter: brightness(0.15) grayscale(100%) contrast(110%) blur(2px);
-    }
-
-    .grain, .dust {
-      pointer-events: none;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: -3;
-      mix-blend-mode: overlay;
+      color: #00ff95; /* Matrix green */
     }
 
     .grain {
-      background-image: url('https://i.imgur.com/8fK4h1L.png');
-      opacity: 0.06;
-      animation: grainShift 0.8s steps(8) infinite;
-    }
-
-    .dust {
-      background-image: url('https://i.imgur.com/ebWhDqV.png');
-      opacity: 0.03;
-      animation: flickerDust 5s ease-in-out infinite;
-    }
-
-    .message-overlay {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      z-index: -2;
-      font-size: 1rem;
-      color: #cc0000;
-      opacity: 0.08;
-      white-space: pre;
       pointer-events: none;
-      animation: scrollText 60s linear infinite;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+      background-image: url('https://i.imgur.com/8fK4h1L.png');
+      mix-blend-mode: overlay;
+      opacity: 0.07;
+      animation: grain 1s steps(10) infinite;
     }
 
-    @keyframes scrollText {
-      0% { top: 100%; }
-      100% { top: -200%; }
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-1px, 1px); }
+      40% { transform: translate(-1px, -1px); }
+      60% { transform: translate(1px, 1px); }
+      80% { transform: translate(1px, -1px); }
     }
 
-    @keyframes grainShift {
-      0% { transform: translate(0, 0); }
-      50% { transform: translate(-1px, 1px); }
-      100% { transform: translate(1px, -1px); }
+    .glitch {
+      font-size: 3.5rem;
+      color: #ff3b3b; /* candy red */
+      letter-spacing: 0.15rem;
+      position: relative;
+      animation: glitch-flicker 1s infinite;
     }
 
-    @keyframes flickerDust {
-      0%, 100% { opacity: 0.02; }
-      50% { opacity: 0.05; }
+    @keyframes glitch-flicker {
+      0% { text-shadow: 1px 0 red, -1px 0 lime; }
+      50% { text-shadow: -1px 0 lime, 1px 0 red; }
+      100% { text-shadow: 1px 0 red, -1px 0 lime; }
     }
 
     .content {
       text-align: center;
       z-index: 1;
-      animation: fadeUp 5s ease-in-out;
-    }
-
-    @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .glitch {
-      font-size: 2.8rem;
-      color: #bbb;
-      letter-spacing: 0.08rem;
-      font-weight: normal;
-      opacity: 0.85;
-      animation: glitchFade 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes glitchFade {
-      0% { opacity: 1; transform: translateX(0); }
-      50% { opacity: 0.5; transform: translateX(-0.5px); }
-      100% { opacity: 1; transform: translateX(0.5px); }
     }
 
     p {
-      font-size: 1.1rem;
-      margin-top: 0.5em;
-      color: #888;
-      opacity: 0.65;
-      animation: pFade 6s ease-in-out infinite;
-    }
-
-    @keyframes pFade {
-      0%, 100% { opacity: 0.65; }
-      50% { opacity: 0.35; }
+      font-size: 1.2rem;
+      margin-top: 0.6em;
+      color: #00ff95;
+      opacity: 0.8;
     }
 
     a.return-link {
       display: inline-block;
       margin-top: 2em;
-      color: #888;
+      color: #ff3b3b;
       text-decoration: none;
-      border-bottom: 1px dotted #555;
+      border-bottom: 1px dashed #ff3b3b;
       font-size: 1rem;
-      opacity: 0.55;
-      transition: opacity 0.2s ease;
+      opacity: 0.7;
+      transition: all 0.3s ease;
     }
 
     a.return-link:hover {
       opacity: 1;
+      color: #fff;
+      border-bottom: 1px solid #fff;
     }
 
     .timestamp {
       margin-top: 2em;
-      font-size: 2.2rem;
-      font-family: 'Courier New', monospace;
-      color: #666;
-      background: rgba(0,0,0,0.4);
-      padding: 0.3em 0.7em;
+      font-size: 3rem;
+      font-family: 'DS-Digital', 'Courier New', monospace;
+      color: #ff3b3b;
+      background: #111;
+      padding: 0.4em 0.8em;
       border-radius: 0.2em;
-      animation: clockFade 4s ease-in-out infinite;
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+      text-shadow: 0 0 5px #f00, 0 0 15px #f00;
     }
 
-    @keyframes clockFade {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 0.4; }
+    @font-face {
+      font-family: 'DS-Digital';
+      src: url('https://cdn.jsdelivr.net/gh/makethedigital/fonts@main/DS-DIGI.TTF') format('truetype');
     }
   </style>
 </head>
 <body>
-  <video class="background-video" autoplay muted loop playsinline>
-    <source src="https://cdn.coverr.co/videos/coverr-night-fog-3601/1080p.mp4" type="video/mp4">
-  </video>
   <div class="grain"></div>
-  <div class="dust"></div>
-  <div class="message-overlay">
-    ${"Maybe what you seek is seeking you.\n".repeat(100)}
-  </div>
 
   <div class="content">
     <div class="glitch">err0r_404</div>
