@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>err0r_404</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
     body {
       margin: 0;
-      background-color: #0d0d0d;
-      font-family: 'Courier New', monospace;
+      background-color: #0a0a0a;
+      font-family: 'Share Tech Mono', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow: hidden;
       position: relative;
+      color: #aaa;
     }
 
     .background-video {
@@ -24,36 +27,129 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      z-index: -1;
-      filter: brightness(0.2) grayscale(100%) contrast(120%) blur(2px);
+      z-index: -4;
+      filter: brightness(0.15) grayscale(100%) contrast(110%) blur(2px);
+    }
+
+    .grain, .dust {
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      mix-blend-mode: overlay;
+    }
+
+    .grain {
+      background-image: url('https://i.imgur.com/8fK4h1L.png');
+      opacity: 0.06;
+      animation: grainShift 0.8s steps(8) infinite;
+    }
+
+    .dust {
+      background-image: url('https://i.imgur.com/ebWhDqV.png');
+      opacity: 0.03;
+      animation: flickerDust 5s ease-in-out infinite;
+    }
+
+    .message-overlay {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: -2;
+      font-size: 1rem;
+      color: #cc0000;
+      opacity: 0.08;
+      white-space: pre;
+      pointer-events: none;
+      animation: scrollText 60s linear infinite;
+    }
+
+    @keyframes scrollText {
+      0% { top: 100%; }
+      100% { top: -200%; }
+    }
+
+    @keyframes grainShift {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-1px, 1px); }
+      100% { transform: translate(1px, -1px); }
+    }
+
+    @keyframes flickerDust {
+      0%, 100% { opacity: 0.02; }
+      50% { opacity: 0.05; }
     }
 
     .content {
       text-align: center;
-      animation: flicker 2s infinite;
-      color: #cccccc;
       z-index: 1;
+      animation: fadeUp 5s ease-in-out;
     }
 
-    h1 {
-      font-size: 3rem;
-      letter-spacing: 0.2rem;
-      color: #ff3b3b;
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .glitch {
+      font-size: 2.8rem;
+      color: #bbb;
+      letter-spacing: 0.08rem;
+      font-weight: normal;
+      opacity: 0.85;
+      animation: glitchFade 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes glitchFade {
+      0% { opacity: 1; transform: translateX(0); }
+      50% { opacity: 0.5; transform: translateX(-0.5px); }
+      100% { opacity: 1; transform: translateX(0.5px); }
     }
 
     p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-top: 0.5em;
       color: #888;
+      opacity: 0.65;
+      animation: pFade 6s ease-in-out infinite;
     }
 
-    @keyframes flicker {
-      0% { opacity: 1; }
-      5% { opacity: 0.8; }
-      10% { opacity: 0.9; }
-      20% { opacity: 0.6; }
-      30% { opacity: 0.7; }
-      100% { opacity: 1; }
+    @keyframes pFade {
+      0%, 100% { opacity: 0.65; }
+      50% { opacity: 0.35; }
+    }
+
+    a.return-link {
+      display: inline-block;
+      margin-top: 2em;
+      color: #888;
+      text-decoration: none;
+      border-bottom: 1px dotted #555;
+      font-size: 1rem;
+      opacity: 0.55;
+      transition: opacity 0.2s ease;
+    }
+
+    a.return-link:hover {
+      opacity: 1;
+    }
+
+    .timestamp {
+      margin-top: 2em;
+      font-size: 2.2rem;
+      font-family: 'Courier New', monospace;
+      color: #666;
+      background: rgba(0,0,0,0.4);
+      padding: 0.3em 0.7em;
+      border-radius: 0.2em;
+      animation: clockFade 4s ease-in-out infinite;
+    }
+
+    @keyframes clockFade {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.4; }
     }
   </style>
 </head>
@@ -61,16 +157,27 @@
   <video class="background-video" autoplay muted loop playsinline>
     <source src="https://cdn.coverr.co/videos/coverr-night-fog-3601/1080p.mp4" type="video/mp4">
   </video>
-
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/audio/2022/08/04/audio_a419e4fb96.mp3" type="audio/mp3">
-  </audio>
+  <div class="grain"></div>
+  <div class="dust"></div>
+  <div class="message-overlay">
+    ${"Maybe what you seek is seeking you.\n".repeat(100)}
+  </div>
 
   <div class="content">
-    <h1>err0r_404</h1>
+    <div class="glitch">err0r_404</div>
     <p>this place was never meant to be found</p>
-    <p>no signals detected</p>
-    <p>return?</p>
+    <p>you are drifting between frequencies</p>
+    <p>return to <a class="return-link" href="https://instagram.com/l0nely_plan3t">l0nely_plan3t?</a></p>
+    <p class="timestamp" id="glitchTime"></p>
   </div>
+
+  <script>
+    function updateGlitchTime() {
+      const now = new Date();
+      const time = now.toLocaleTimeString();
+      document.getElementById('glitchTime').textContent = time;
+    }
+    setInterval(updateGlitchTime, 1000);
+  </script>
 </body>
 </html>
